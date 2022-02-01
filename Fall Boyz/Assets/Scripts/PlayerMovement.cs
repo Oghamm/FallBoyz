@@ -10,6 +10,7 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private float moveSpeed = 0.00001f;
 
     private Camera mainCamera;
+    private CamFollowSmooth followScript;
 
     #region Server
 
@@ -29,25 +30,29 @@ public class PlayerMovement : NetworkBehaviour
     public override void OnStartAuthority()
     {
         mainCamera = Camera.main;
+        followScript = mainCamera.GetComponent<CamFollowSmooth>();
+        followScript.target = this.transform;
+
     }
+
 
     [Client]
     private void Update()
     {
         if (!hasAuthority) { return; }
 
-        /*if (!Input.GetMouseButtonDown(1)) { return; }
+        if (!Input.GetMouseButtonDown(1)) { return; }
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
         if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity)) { return; }
 
         //Send the move position to server
-        CmdMove(hit.point);*/
+        CmdMove(hit.point);
 
-        if (isLocalPlayer) {
+        /*if (isLocalPlayer) {
             Vector3 movement = new Vector3(Input.GetAxis("Horizontal") * moveSpeed, 0, Input.GetAxis("Vertical") * moveSpeed);
             agent.transform.position = agent.transform.position + movement;
-        }
+        }*/
 
     }
 
